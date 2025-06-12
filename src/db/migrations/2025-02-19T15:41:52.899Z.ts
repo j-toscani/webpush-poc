@@ -3,14 +3,15 @@ import { notNull, primaryKey } from '../queryHelper.ts';
 
 // deno-lint-ignore no-explicit-any
 export async function up(db: Kysely<any>) {
-	await db.schema.createTable('test_table')
+	await db.schema.createTable('subscriptions')
 		.addColumn('id', 'serial', primaryKey)
-		.addColumn('name', 'char(255)', notNull)
-		.addColumn('verified', 'boolean', notNull)
+		.addColumn('enpoint', 'varchar', notNull)
+		.addColumn('expirationTime', 'varchar')
+		.addColumn('keys', 'json', notNull)
 		.execute();
 }
 
 // deno-lint-ignore no-explicit-any
 export async function down(db: Kysely<any>) {
-	await db.schema.dropTable('test_table').execute();
+	await db.schema.dropTable('subscriptions').execute();
 }
