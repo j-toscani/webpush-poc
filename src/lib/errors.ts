@@ -1,4 +1,6 @@
 import { ZodIssue } from 'zod';
+import { Handler } from './types.ts';
+import { logger } from './logger.ts';
 
 export const HTTP_CODES = {
 	FOUND: 302,
@@ -26,6 +28,39 @@ export abstract class ApiError extends Error {
 	getResponse() {
 		return this.res;
 	}
+}
+
+export function catchError(handler: Handler): Handler {
+	return async (...args) => {
+		const path = new URL(args[0].url).pathname;
+		try {
+			logger.info(`${path} <`);
+			const result = await handler(...args);
+			logger.info(`${path} > [${result.status}]`);
+			return result;
+		} catch (error: unknown) {
+			if (error instanceof ApiError) {
+				logError(path, error);
+				return error.getResponse();
+			}
+
+			const internalError = new InternalServerException(
+				error instanceof Error ? error.message : 'Unknown Error',
+				error,
+			);
+			logError(path, internalError);
+
+			return internalError.getResponse();
+		}
+	};
+}
+
+function logError(url: string, error: ApiError) {
+	logger.error(
+		`${url} > [${error.res.status}] ${error.res.statusText}, ${
+			error.cause ? JSON.stringify(error.cause, null, 2) : 'no-cause'
+		}`,
+	);
 }
 
 export class BadRequestException extends ApiError {

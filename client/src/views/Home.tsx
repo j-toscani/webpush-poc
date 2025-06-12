@@ -4,8 +4,14 @@ export default function Home() {
   return (
     <div>
       <h1 className="text-4xl mb-8">Welcome</h1>
-      <RequestButton />
-      <SubscribeButton />
+      <div className="flex gap-4">
+        <RequestButton />
+        <SubscribeButton />
+      </div>
+      <div className="mt-4 flex gap-4">
+        <NotifyMeButton />
+        <NotifyAllButton />
+      </div>
     </div>
   );
 }
@@ -45,6 +51,29 @@ function RequestButton() {
       Request permission
     </button>
   );
+}
+
+function NotifyAllButton() {
+  const panic = () => fetch("/api/notify-all");
+
+  return (
+    <button type="button" className="bg-red-600" onClick={panic}>PANIC!</button>
+  );
+}
+function NotifyMeButton() {
+  const notifyMe = async () => {
+    const registration = await navigator.serviceWorker.getRegistration();
+    const subscribed = await registration!.pushManager.getSubscription();
+    if (!subscribed) return;
+    fetch("/api/notify-me", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ endpoint: subscribed.endpoint }),
+    });
+  };
+  return <button type="button" onClick={notifyMe}>Notify Me!</button>;
 }
 
 function SubscribeButton() {
@@ -109,6 +138,13 @@ function SubscribeButton() {
     const subscription = await registration?.pushManager.getSubscription();
     const unsubscribed = await subscription?.unsubscribe();
     if (unsubscribed) {
+      await fetch("/api/remove-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ endpoint: subscription?.endpoint }),
+      });
       console.info("Successfully unsubscribed from push notifications.");
     }
     setSubState("not-subscribed");

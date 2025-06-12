@@ -12,5 +12,9 @@ self.addEventListener("push", (event: PushEvent) => {
     badge: "/logo_small.png",
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  try {
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (error) {
+    console.error("[Service Worker] Error showing notification:", error);
+  }
 });

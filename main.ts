@@ -1,12 +1,9 @@
-import { PORT } from './src/constants.ts';
-import { migrate } from './src/db/db.ts';
 import { routes } from './src/routes.ts';
-import { serveClientController } from './src/controllers/serveClientController.ts';
+import { serveDir, serveFile } from 'jsr:@std/http/file-server';
 
 
-await migrate();
 export default Deno.serve(
-	{ port: PORT },
+	{ port: 4000 },
 	(request, info) => {
 		const url = new URL(request.url)
 
@@ -18,6 +15,22 @@ export default Deno.serve(
 			const params = route.pattern.exec(url)!
 			return route.handler(request, params, info)
 		}
-		return serveClientController(request)
+		const path = new URL(request.url).pathname
+
+		if (path.includes('images/')) {
+			return serveDir(request, {
+				fsRoot: 'images',
+				urlRoot: 'images',
+			})
+		}
+
+		if (path.includes('.')) {
+			return serveDir(request, {
+				fsRoot: 'dist',
+				urlRoot: '',
+			})
+		}
+
+		return serveFile(request, './dist/index.html')
 	}
 );

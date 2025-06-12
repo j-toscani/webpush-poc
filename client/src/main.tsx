@@ -7,7 +7,6 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 
 import Layout from "./Layout.tsx";
 import Home from "./views/Home.tsx";
-import { Auth } from "./views/Auth.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,10 +19,6 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: '/login',
-    Component: Auth
-  }
 ]);
 
 createRoot(document.getElementById("root") as HTMLElement).render(
