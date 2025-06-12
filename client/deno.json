@@ -25,7 +25,6 @@
   "imports": {
     "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.0",
     "@vitejs/plugin-react-swc": "npm:@vitejs/plugin-react-swc@^3.7.1",
-    "better-auth": "npm:better-auth@^1.1.18",
     "vite": "npm:vite@^6.0.1"
   }
 }

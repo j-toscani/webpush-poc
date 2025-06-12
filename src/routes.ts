@@ -15,14 +15,19 @@ const routes: Array<Route> = [
 		handler: async (request) => {
 			const body = await request.json();
 			const data = subscriptionSchema.parse(body);
-			logger.info('/add-subscription');
-			logger.info(data);
-			logger.info(`Subscribing ${data.endpoint}`);
 
 			const store = await getStore();
 			await store.addOneSubscriber(data);
 
-			return new Response();
+			return new Response('Success');
+		},
+	},
+	{
+		pattern: new URLPattern({ pathname: '/api/hi' }),
+		method: 'GET',
+		handler: () => {
+			logger.info('Received a request to /api/hi');
+			return new Response('Hello, world!');
 		},
 	},
 	{
@@ -31,22 +36,19 @@ const routes: Array<Route> = [
 		handler: async (request) => {
 			const body = await request.json();
 			const data = endpointSchema.parse(body);
-			logger.info('/remove-subscription');
-			logger.info(data);
-			logger.info(`Subscribing ${data.endpoint}`);
 
 			const store = await getStore();
 			await store.removeOneSubscriber(data.endpoint);
 
-			return new Response();
+			return new Response('Success');
 		},
 	},
 	{
-		pattern: new URLPattern({ pathname: '/notify-me' }),
-		method: 'GET',
+		pattern: new URLPattern({ pathname: '/api/notify-me' }),
+		method: 'POST',
 		handler: async (request) => {
 			const body = await request.json();
-			const data = subscriptionSchema.parse(body);
+			const data = endpointSchema.parse(body);
 			const store = await getStore();
 			const subscription = store.getSubscriber(data.endpoint);
 
@@ -55,9 +57,8 @@ const routes: Array<Route> = [
 				return new Response('Subscription not found', { status: 404 });
 			}
 
-			const saveSub = subscriptionSchema.parse(subscription);
-			sendNotifications([saveSub]);
-			return new Response();
+			sendNotifications([subscription], { message: 'Moin oder wat.', type: 'info' });
+			return new Response('Sucess');
 		},
 	},
 	{
@@ -66,26 +67,24 @@ const routes: Array<Route> = [
 		handler: async () => {
 			const store = await getStore();
 			const subscription = store.getAllSubscriber();
-			sendNotifications(subscription.map((s) => subscriptionSchema.parse(s)));
-			return new Response();
+			sendNotifications(subscription.map((s) => subscriptionSchema.parse(s)), { message: 'PANIK!!!', type: 'warning' });
+			return new Response('Success');
 		},
 	},
 ];
 
 export { routes };
 
-function sendNotifications(subscriptions: z.infer<typeof subscriptionSchema>[]) {
-	const notification = JSON.stringify({
-		title: 'Hello, Notifications!',
-		options: {
-			body: `ID: ${Math.floor(Math.random() * 100)}`,
-		},
-	});
+function sendNotifications(
+	subscriptions: z.infer<typeof subscriptionSchema>[],
+	payload: { message: string; type: 'info' | 'warning' },
+) {
+	const notification = JSON.stringify(payload);
 
 	const options = {
 		TTL: 10000,
 		vapidDetails: {
-			subject: 'mailto:julian_toscani@gmx.de',
+			subject: Deno.env.get('VAPID_SUBJECT') || 'mailto:',
 			publicKey: Deno.env.get('VAPID_PUBLIC_KEY'),
 			privateKey: Deno.env.get('VAPID_PRIVATE_KEY'),
 		},

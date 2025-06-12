@@ -11,14 +11,9 @@
 	"nodeModulesDir": "auto",
 	"imports": {
 		"@release-it/conventional-changelog": "npm:@release-it/conventional-changelog@^10.0.0",
-		"kysely": "npm:kysely@^0.27.5",
-		"kysely-codegen": "npm:kysely-codegen@^0.17.0",
-		"pg": "npm:pg@^8.13.3",
-		"pg-pool": "npm:pg-pool@^3.7.1",
 		"release-it": "npm:release-it@^18.1.2",
 		"web-push": "npm:web-push@^3.6.7",
-		"zod": "npm:zod@^3.24.2",
-		"better-auth": "npm:better-auth@^1.1.18"
+		"zod": "npm:zod@^3.24.2"
 	},
 	"lint": {
 		"include": [

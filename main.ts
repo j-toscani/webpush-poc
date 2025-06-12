@@ -15,16 +15,15 @@ export default Deno.serve(
 			const params = route.pattern.exec(url)!
 			return route.handler(request, params, info)
 		}
-		const path = new URL(request.url).pathname
 
-		if (path.includes('images/')) {
+		if (url.pathname.includes('images/')) {
 			return serveDir(request, {
 				fsRoot: 'images',
 				urlRoot: 'images',
 			})
 		}
 
-		if (path.includes('.')) {
+		if (url.pathname.includes('.')) {
 			return serveDir(request, {
 				fsRoot: 'dist',
 				urlRoot: '',

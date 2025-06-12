@@ -65,10 +65,10 @@ function NotifyMeButton() {
     const registration = await navigator.serviceWorker.getRegistration();
     const subscribed = await registration!.pushManager.getSubscription();
     if (!subscribed) return;
-    fetch("/api/notify-me", {
+    await fetch("/api/notify-me", {
       method: "POST",
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ endpoint: subscribed.endpoint }),
     });
@@ -122,7 +122,7 @@ function SubscribeButton() {
       ),
     });
     // notifyMeButton.disabled = false;
-    fetch("/api/add-subscription", {
+    await fetch("/api/add-subscription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
