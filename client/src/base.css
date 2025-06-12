@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@layer base, utilities;
+
+@layer base {
+  :root {
+    --spacing: 0.25rem;
+    --spacing-sx: calc(var(--spacing) * 1);
+    --spacing-s: calc(var(--spacing) * 2);
+    --spacing-m: calc(var(--spacing) * 3);
+    --spacing-l: calc(var(--spacing) * 4);
+    --spacing-xl: calc(var(--spacing) * 6);
+    --spacing-xxl: calc(var(--spacing) * 8);
+    --spacing-auto: auto;
+  }
+
+  *,
+  *::after,
+  *::before {
+    box-sizing: inherit;
+  }
+
+  html {
+    font-family: sans-serif;
+    box-sizing: border-box;
+    line-height: 1.5;
+  }
+
+  button,
+  label,
+  textarea,
+  input {
+    font-size: 1rem;
+  }
+
+  textarea {
+    line-height: 1.5;
+  }
+}
+
+@layer components {
+  select,
+  textarea,
+  input {
+    @apply p-2;
+    @apply bg-gray-100 rounded-sm;
+
+    &:read-only:not(select) {
+      @apply bg-transparent;
+    }
+  }
+
+
+
+  dialog {
+    @apply hidden;
+  }
+
+  dialog[open] {
+    @apply flex;
+    @apply sm:p-8 rounded-md place-self-center;
+    @apply w-full max-w-3xl h-full max-h-4/5
+  }
+
+  .button,
+  button {
+    @apply cursor-pointer;
+    @apply px-4 py-2;
+    @apply bg-green-600 text-white;
+    @apply transition-colors hover:bg-green-700;
+    @apply rounded;
+
+    &:not(.icon) {
+      @apply flex gap-2;
+      min-width: 10ch;
+    }
+  }
+
+  a:not(.button) {
+    @apply underline;
+  }
+
+  .icon {
+    @apply flex place-items-center place-content-center;
+    @apply p-0 h-8;
+    @apply aspect-square;
+  }
+
+  .app-layout {
+    @apply grid;
+    grid-template-columns:
+      [full-start] minmax(1rem, 1fr) [content-start] minmax(
+      24ch,
+      94ch
+    ) [content-end] minmax(1rem, 1fr) [full-end];
+  }
+
+  .app-content {
+    grid-column: content-start / content-end;
+    @apply sm:p-8;
+  }
+
+  .app-content-full {
+    grid-column: full-start / full-end;
+  }
+
+}

@@ -1,0 +1,47 @@
+{
+	"tasks": {
+		"insert-fixtures": "deno run --env-file=.env.development --allow-env --allow-net src/db/fixtures.ts",
+		"dev:client": "NODE_ENV=development deno task --cwd client dev",
+		"dev:server": "NODE_ENV=development deno run --env-file=.env.development --env-file=.env --allow-net --allow-env --allow-read --allow-write --watch main.ts",
+		"generate-types": "kysely-codegen --env-file=.env.development --out-file src/db/db.d.ts",
+		"build": "deno task --cwd client build",
+		"release": "release-it",
+		"start": "NODE_ENV=production deno run --allow-net --allow-env --allow-read --allow-write main.ts"
+	},
+	"imports": {
+		"@release-it/conventional-changelog": "npm:@release-it/conventional-changelog@^10.0.0",
+		"kysely": "npm:kysely@^0.27.5",
+		"kysely-codegen": "npm:kysely-codegen@^0.17.0",
+		"pg": "npm:pg@^8.13.3",
+		"pg-pool": "npm:pg-pool@^3.7.1",
+		"release-it": "npm:release-it@^18.1.2",
+		"zod": "npm:zod@^3.24.2",
+		"better-auth": "npm:better-auth@^1.1.18"
+	},
+	"lint": {
+		"include": [
+			"client/src/",
+			"src/"
+		],
+		"rules": {
+			"include": [
+				"no-const-assign",
+				"no-eval",
+				"no-self-compare",
+				"no-throw-literal",
+				"no-useless-rename",
+				"no-console"
+			]
+		}
+	},
+	"fmt": {
+		"include": [
+			"client/src/",
+			"src/"
+		],
+		"useTabs": true,
+		"lineWidth": 120,
+		"indentWidth": 2,
+		"singleQuote": true
+	}
+}

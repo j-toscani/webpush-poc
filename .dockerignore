@@ -1,0 +1,7 @@
+.git/
+.devcontainer/
+.github/
+LICENSE
+README.md
+node_modules/
+.dist/

@@ -1,0 +1,19 @@
+{
+	"css.customData": [
+		".vscode/tailwind.json"
+	],
+	"editor.formatOnSave": true,
+	"editor.tabSize": 2,
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"askForPassword": true,
+			"driver": "PostgreSQL",
+			"name": "cookbook-db",
+			"database": "postgres",
+			"username": "postgres"
+		}
+	]
+}
